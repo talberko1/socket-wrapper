@@ -3,12 +3,7 @@
 //
 #include "socketwrapper/Socket.h"
 
-/* private methods */
 Socket::Socket(int socketFileDescriptor, int domain, int type, int protocol) {
-    init(socketFileDescriptor, domain, type, protocol);
-}
-
-void Socket::init(int socketFileDescriptor, int domain, int type, int protocol) {
     m_socket = socketFileDescriptor;
     m_domain = domain;
     m_type = type;
@@ -18,16 +13,13 @@ void Socket::init(int socketFileDescriptor, int domain, int type, int protocol) 
     }
 }
 
+Socket::Socket(int domain, int type, int protocol) : Socket(socket(domain, type, protocol), domain, type, protocol){}
+
 void Socket::getSocketInitArguments(int socketFileDescriptor, int *domain, int *type, int *protocol) {
     int argSize = sizeof(int);
     getsockopt(socketFileDescriptor, SOL_SOCKET, SO_DOMAIN, &domain, (socklen_t *) &argSize);
     getsockopt(socketFileDescriptor, SOL_SOCKET, SO_TYPE, &type, (socklen_t *) &argSize);
     getsockopt(socketFileDescriptor, SOL_SOCKET, SO_PROTOCOL, &protocol, (socklen_t *) &argSize);
-}
-
-/* public methods */
-Socket::Socket(int domain, int type, int protocol) {
-    init(socket(domain, type, protocol), domain, type, protocol);
 }
 
 sockaddr_in Socket::createTargetAddress(std::string& ip, int port) const {

@@ -43,7 +43,7 @@ public:
 
     void connect(std::string& ip, int port);
 
-    long recv(int bytes) const;
+    long recv(int bytes, std::string& out) const;
 
     long send(std::string &message) const;
 

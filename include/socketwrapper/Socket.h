@@ -50,6 +50,12 @@ public:
     void close() const;
 
     int getSocketFileDescriptor() const;
+
+    int getSocketAddressFamily() const;
+
+    int getSocketType() const;
+
+    int getSocketProtocol() const;
 };
 
 #endif //SOCKET_WRAPPER_SOCKET_H

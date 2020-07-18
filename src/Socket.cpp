@@ -88,3 +88,19 @@ void Socket::close() const {
         throw SocketException("Failed to close socket");
     }
 }
+
+int Socket::getSocketFileDescriptor() const {
+    return m_socket;
+}
+
+int Socket::getSocketAddressFamily() const {
+    return m_domain;
+}
+
+int Socket::getSocketType() const {
+    return m_type;
+}
+
+int Socket::getSocketProtocol() const {
+    return m_protocol;
+}

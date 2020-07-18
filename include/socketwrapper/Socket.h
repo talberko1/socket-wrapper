@@ -48,6 +48,8 @@ public:
     long send(std::string &message) const;
 
     void close() const;
+
+    int getSocketFileDescriptor() const;
 };
 
 #endif //SOCKET_WRAPPER_SOCKET_H

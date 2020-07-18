@@ -1,0 +1,3 @@
+/home/tal/Desktop/dev/socket-wrapper/build/CMakeFiles/rebuild_cache.dir
+/home/tal/Desktop/dev/socket-wrapper/build/CMakeFiles/edit_cache.dir
+/home/tal/Desktop/dev/socket-wrapper/build/CMakeFiles/socket-wrapper.dir

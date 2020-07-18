@@ -30,17 +30,17 @@ Socket::Socket(int domain, int type, int protocol) {
     init(socket(domain, type, protocol), domain, type, protocol);
 }
 
-sockaddr_in Socket::createTargetAddress(const std::pair<std::string, int> &address) const {
+sockaddr_in Socket::createTargetAddress(std::string& ip, int port) const {
     sockaddr_in targetAddress{};
     memset(&targetAddress, 0, sizeof(targetAddress));
     targetAddress.sin_family = m_domain;
-    targetAddress.sin_addr.s_addr = inet_addr(address.first.c_str());
-    targetAddress.sin_port = htons(address.second);
+    targetAddress.sin_addr.s_addr = inet_addr(ip.c_str());
+    targetAddress.sin_port = htons(port);
     return targetAddress;
 }
 
-void Socket::bind(const std::pair<std::string, int> &address) {
-    sockaddr_in hostAddress = createTargetAddress(address);
+void Socket::bind(std::string& ip, int port) {
+    sockaddr_in hostAddress = createTargetAddress(ip, port);
     if (::bind(m_socket, (sockaddr *) &hostAddress, sizeof(hostAddress)) == -1) {
         throw SocketException("Failed to bind socket to given address");
     }
@@ -66,8 +66,8 @@ std::pair<Socket, std::string> Socket::accept() const {
     throw SocketException("Unable to accept incoming socket");
 }
 
-void Socket::connect(const std::pair<std::string, int> &address) {
-    sockaddr_in targetAddress = createTargetAddress(address);
+void Socket::connect(std::string& ip, int port) {
+    sockaddr_in targetAddress = createTargetAddress(ip, port);
     if (::connect(m_socket, (sockaddr *) &targetAddress, sizeof(targetAddress)) < 0) {
         throw SocketException("Could not connect to target machine");
     }

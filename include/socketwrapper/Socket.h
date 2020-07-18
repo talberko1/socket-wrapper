@@ -32,18 +32,18 @@ protected:
     int m_type{};
     int m_protocol{};
 
-    sockaddr_in createTargetAddress(const std::pair<std::string, int> &address) const;
+    sockaddr_in createTargetAddress(std::string& ip, int port) const;
 
 public:
     Socket(int domain, int type, int protocol);
 
-    void bind(const std::pair<std::string, int> &address);
+    void bind(std::string& ip, int port);
 
     void listen(int listeners) const;
 
     std::pair<Socket, std::string> accept() const;
 
-    void connect(const std::pair<std::string, int> &address);
+    void connect(std::string& ip, int port);
 
     long recv(int bytes) const;
 

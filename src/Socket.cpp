@@ -73,13 +73,17 @@ long Socket::send(std::string &message) const {
     return status;
 }
 
-long Socket::recv(int bytes) const {
-    char *buffer = new char[bytes + 1];
+long Socket::recv(int bytes, std::string& out) const {
+    char buffer[bytes + 1];
     memset(buffer, 0, bytes + 1);
-    int status = ::recv(this->m_socket, buffer, sizeof(buffer), 0);
+    int status = ::recv(this->m_socket, buffer, bytes, 0);
     if (status == -1) {
         throw SocketException("Failed to receive data");
     }
+    if (status == 0) {
+        return 0;
+    }
+    out = buffer;
     return status;
 }
 

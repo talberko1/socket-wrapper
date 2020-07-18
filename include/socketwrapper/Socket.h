@@ -22,8 +22,6 @@ class Socket {
 private:
     Socket(int socketFileDescriptor, int domain, int type, int protocol);
 
-    void init(int socketFileDescriptor, int domain, int type, int protocol);
-
     static void getSocketInitArguments(int socketFileDescriptor, int *domain, int *type, int *protocol);
 
 protected:

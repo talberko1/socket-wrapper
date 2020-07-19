@@ -22,18 +22,18 @@ class Socket {
 private:
     Socket(int socketFileDescriptor, int domain, int type, int protocol);
 
-    static void getSocketInitArguments(int socketFileDescriptor, int *domain, int *type, int *protocol);
-
 protected:
-    int m_socket{};
-    int m_domain{};
-    int m_type{};
-    int m_protocol{};
+    int m_socket;
+    int m_domain;
+    int m_type;
+    int m_protocol;
 
     sockaddr_in createTargetAddress(std::string& ip, int port) const;
 
 public:
     Socket(int domain, int type, int protocol);
+
+    static Socket WrapFileDescriptor(int socketFileDescriptor);
 
     void bind(std::string& ip, int port);
 

@@ -8,5 +8,6 @@ set(include_dir "${PROJECT_SOURCE_DIR}/include/")
 file(GLOB source_files "${source_dir}/*.cpp")
 file(GLOB header_files "${source_dir}/*.h")
 
-include_directories(./include)
+include_directories(${include_dir})
+
 add_library(socket-wrapper SHARED ${source_files} ${header_files})

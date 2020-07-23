@@ -1,4 +1,4 @@
-/snap/clion/114/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/tal/Desktop/dev/socket-wrapper
+/snap/clion/121/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/tal/Desktop/dev/socket-wrapper
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/tal/Desktop/dev/socket-wrapper/cmake-build-debug

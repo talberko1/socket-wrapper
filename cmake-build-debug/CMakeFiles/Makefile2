@@ -74,12 +74,12 @@ clean: CMakeFiles/socket-wrapper.dir/clean
 CMakeFiles/socket-wrapper.dir/all:
 	$(MAKE) -f CMakeFiles/socket-wrapper.dir/build.make CMakeFiles/socket-wrapper.dir/depend
 	$(MAKE) -f CMakeFiles/socket-wrapper.dir/build.make CMakeFiles/socket-wrapper.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/tal/Desktop/dev/socket-wrapper/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target socket-wrapper"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/tal/Desktop/dev/socket-wrapper/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target socket-wrapper"
 .PHONY : CMakeFiles/socket-wrapper.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/socket-wrapper.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tal/Desktop/dev/socket-wrapper/cmake-build-debug/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tal/Desktop/dev/socket-wrapper/cmake-build-debug/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/socket-wrapper.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/tal/Desktop/dev/socket-wrapper/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/socket-wrapper.dir/rule

@@ -150,6 +150,33 @@ src/Socket.cpp.s:
 	$(MAKE) -f CMakeFiles/socket-wrapper.dir/build.make CMakeFiles/socket-wrapper.dir/src/Socket.cpp.s
 .PHONY : src/Socket.cpp.s
 
+src/testapp.o: src/testapp.cpp.o
+
+.PHONY : src/testapp.o
+
+# target to build an object file
+src/testapp.cpp.o:
+	$(MAKE) -f CMakeFiles/socket-wrapper.dir/build.make CMakeFiles/socket-wrapper.dir/src/testapp.cpp.o
+.PHONY : src/testapp.cpp.o
+
+src/testapp.i: src/testapp.cpp.i
+
+.PHONY : src/testapp.i
+
+# target to preprocess a source file
+src/testapp.cpp.i:
+	$(MAKE) -f CMakeFiles/socket-wrapper.dir/build.make CMakeFiles/socket-wrapper.dir/src/testapp.cpp.i
+.PHONY : src/testapp.cpp.i
+
+src/testapp.s: src/testapp.cpp.s
+
+.PHONY : src/testapp.s
+
+# target to generate assembly for a file
+src/testapp.cpp.s:
+	$(MAKE) -f CMakeFiles/socket-wrapper.dir/build.make CMakeFiles/socket-wrapper.dir/src/testapp.cpp.s
+.PHONY : src/testapp.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -162,6 +189,9 @@ help:
 	@echo "... src/Socket.o"
 	@echo "... src/Socket.i"
 	@echo "... src/Socket.s"
+	@echo "... src/testapp.o"
+	@echo "... src/testapp.i"
+	@echo "... src/testapp.s"
 .PHONY : help
 
 

@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -Wall -Werror -std=c++14 -g  -shared -Wl,-soname,libsocketwrapper.so -o libsocketwrapper.so CMakeFiles/socketwrapper.dir/src/Socket.cpp.o 

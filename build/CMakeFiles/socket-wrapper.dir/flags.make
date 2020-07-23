@@ -6,5 +6,5 @@ CXX_FLAGS =  -Wall -Werror -std=c++14 -fPIC
 
 CXX_DEFINES = -Dsocket_wrapper_EXPORTS
 
-CXX_INCLUDES = -I/home/tal/Desktop/dev/socket-wrapper/./include 
+CXX_INCLUDES = -I/home/tal/Desktop/dev/socket-wrapper/include 
 

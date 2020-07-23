@@ -1,106 +1,76 @@
 //
-// Created by tal on 18/07/2020.
+// Created by tal on 22/07/2020.
 //
+
 #include "socketwrapper/Socket.h"
 
-Socket::Socket(int socket_fd, int domain, int type, int protocol) :
-        m_socket(socket_fd), m_domain(domain), m_type(type), m_protocol(protocol) {
-    if (m_socket == -1) {
-        throw SocketException("Failed to create socket");
-    }
+void assertSocket(int expression, const char *message);
+
+struct sockaddr_in createAddress(int domain, const char *ip, int port);
+
+Socket::Socket(int domain, int type, int protocol) : Socket(socket(domain, type, protocol), domain, type, protocol){}
+
+Socket::Socket(int fd, int domain, int type, int protocol) : m_domain(domain), m_type(type), m_protocol(protocol), m_fd(fd){
+    assertSocket(m_fd, "Failed to initialize socket");
 }
 
-Socket::Socket(int domain, int type, int protocol) : Socket(socket(domain, type, protocol), domain, type, protocol) {}
-
-Socket Socket::WrapFileDescriptor(int socket_fd) {
-    int domain, type, protocol, argSize = sizeof(int);
-    getsockopt(socket_fd, SOL_SOCKET, SO_DOMAIN, &domain, (socklen_t *) &argSize);
-    getsockopt(socket_fd, SOL_SOCKET, SO_TYPE, &type, (socklen_t *) &argSize);
-    getsockopt(socket_fd, SOL_SOCKET, SO_PROTOCOL, &protocol, (socklen_t *) &argSize);
-    return {socket_fd, domain, type, protocol};
-}
-
-sockaddr_in Socket::createTargetAddress(std::string &ip, int port) const {
-    sockaddr_in targetAddress{};
-    memset(&targetAddress, 0, sizeof(targetAddress));
-    targetAddress.sin_family = m_domain;
-    targetAddress.sin_addr.s_addr = inet_addr(ip.c_str());
-    targetAddress.sin_port = htons(port);
-    return targetAddress;
-}
-
-void Socket::bind(std::string &ip, int port) {
-    sockaddr_in hostAddress = createTargetAddress(ip, port);
-    if (::bind(m_socket, (sockaddr *) &hostAddress, sizeof(hostAddress)) == -1) {
-        throw SocketException("Failed to bind socket to given address");
-    }
+void Socket::bind(const char *ip, int port) const {
+    struct sockaddr_in address = createAddress(m_domain, ip, port);
+    assertSocket(::bind(m_fd, (struct sockaddr *) &address, sizeof address), "Failed to bind address to socket");
 }
 
 void Socket::listen(int listeners) const {
-    if (::listen(m_socket, listeners) == -1) {
-        throw SocketException("Failed to listen on the given port");
-    }
+    assertSocket(::listen(m_fd, listeners), "Socket failed to start listening");
 }
 
-std::pair<Socket, std::string> Socket::accept() const {
-    sockaddr_in client_address{};
-    int address_size = sizeof(client_address);
-    memset(&client_address, 0, address_size);
-    int client_fd = ::accept(m_socket, (sockaddr *) &client_address, (socklen_t *) &address_size);
-    if (client_fd != -1) {
-        Socket client_socket = WrapFileDescriptor(client_fd);
-        return std::pair<Socket, std::string>(client_socket, inet_ntoa(client_address.sin_addr));
-    }
-    throw SocketException("Unable to accept incoming socket");
+std::tuple<Socket, const char *> Socket::accept() const {
+    int addressSize = sizeof(struct sockaddr_in);
+    struct sockaddr_in clientAddress{};
+    Socket client = wrapFileDescriptor(::accept(m_fd, (struct sockaddr *) &clientAddress, (socklen_t *) &addressSize));
+    return {client, inet_ntoa(clientAddress.sin_addr)};
 }
 
-void Socket::connect(std::string &ip, int port) {
-    sockaddr_in targetAddress = createTargetAddress(ip, port);
-    if (::connect(m_socket, (sockaddr *) &targetAddress, sizeof targetAddress) < 0) {
-        throw SocketException("Could not connect to target machine");
-    }
+void Socket::connect(const char *ip, int port) const {
+    struct sockaddr_in clientAddress = createAddress(m_domain, ip, port);
+    assertSocket(::connect(m_fd, (struct sockaddr *) &clientAddress, sizeof clientAddress),
+                 "Failed to connect to target address");
 }
 
-long Socket::send(std::string &message) const {
-    int status = ::send(m_socket, message.c_str(), message.size() + 1, 0);
-    if (status == -1) {
-        throw SocketException("Failed to send data");
-    }
-    return status;
+unsigned long Socket::send(const char *message, size_t length, int flags) const {
+    size_t bytes;
+    assertSocket(bytes = ::send(m_fd, message, length, flags), "Failed to send data");
+    return bytes;
 }
 
-long Socket::recv(int bytes, std::string &out) const {
-    char buffer[bytes];
-    memset(buffer, 0, bytes);
-    int status = ::recv(m_socket, buffer, bytes, 0);
-    if (status == -1) {
-        throw SocketException("Failed to receive data");
-    }
-    if (status == 0) {
-        return 0;
-    }
-    out = buffer;
-    return status;
+unsigned long Socket::recv(char* buffer, size_t length, int flags) const {
+    size_t received;
+    assertSocket(received = ::recv(m_fd, buffer, length, flags), "Failed to receive data");
+    return received;
 }
 
 void Socket::close() const {
-    if (::close(m_socket)) {
-        throw SocketException("Failed to close socket");
+    assertSocket(::close(m_fd), "Failed to close the socket");
+}
+
+Socket Socket::wrapFileDescriptor(int fd) {
+    int domain, type, protocol, argSize = sizeof(int);
+    getsockopt(fd, SOL_SOCKET, SO_DOMAIN, &domain, (socklen_t *) &argSize);
+    getsockopt(fd, SOL_SOCKET, SO_TYPE, &type, (socklen_t *) &argSize);
+    getsockopt(fd, SOL_SOCKET, SO_PROTOCOL, &protocol, (socklen_t *) &argSize);
+    return {fd, domain, type, protocol};
+}
+
+
+void assertSocket(int expression, const char *message) {
+    if (expression == SOCKET_ERROR) {
+        throw SocketException(message);
     }
 }
 
-int Socket::getSocketFileDescriptor() const {
-    return m_socket;
-}
-
-int Socket::getSocketAddressFamily() const {
-    return m_domain;
-}
-
-int Socket::getSocketType() const {
-    return m_type;
-}
-
-int Socket::getSocketProtocol() const {
-    return m_protocol;
+struct sockaddr_in createAddress(int domain, const char *ip, int port) {
+    struct sockaddr_in target{};
+    target.sin_family = domain;
+    target.sin_port = htons(port);
+    target.sin_addr.s_addr = inet_addr(ip);
+    return target;
 }

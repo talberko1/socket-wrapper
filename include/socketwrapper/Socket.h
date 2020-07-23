@@ -1,61 +1,35 @@
 //
-// Created by tal on 18/07/2020.
+// Created by tal on 22/07/2020.
 //
 
-#ifndef SOCKET_WRAPPER_SOCKET_H
-#define SOCKET_WRAPPER_SOCKET_H
+#ifndef SERVER_SOCKET_H
+#define SERVER_SOCKET_H
 
-#include <string>
+#include <iostream>
 #include <cstring>
 #include <tuple>
-#include <exception>
-#include <cerrno>
-
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-
-#include "SocketException.h"
+#include "socketwrapper/SocketException.h"
 
 class Socket {
-private:
-    Socket(int socketFileDescriptor, int domain, int type, int protocol);
-
 protected:
-    int m_socket;
     int m_domain;
     int m_type;
     int m_protocol;
-
-    sockaddr_in createTargetAddress(std::string& ip, int port) const;
-
+    int m_fd;
+    Socket(int fd, int domain, int type, int protocol);
 public:
     Socket(int domain, int type, int protocol);
-
-    static Socket WrapFileDescriptor(int socketFileDescriptor);
-
-    void bind(std::string& ip, int port);
-
+    void bind(const char* ip, int port) const;
     void listen(int listeners) const;
-
-    std::pair<Socket, std::string> accept() const;
-
-    void connect(std::string& ip, int port);
-
-    long recv(int bytes, std::string& out) const;
-
-    long send(std::string &message) const;
-
+    std::tuple<Socket, const char*> accept() const;
+    void connect(const char* ip, int port) const;
+    unsigned long send(const char *message, size_t length, int flags=0) const;
+    unsigned long recv(char* buffer, unsigned long bytes, int flags=0) const;
     void close() const;
-
-    int getSocketFileDescriptor() const;
-
-    int getSocketAddressFamily() const;
-
-    int getSocketType() const;
-
-    int getSocketProtocol() const;
+    static Socket wrapFileDescriptor(int fd);
 };
 
-#endif //SOCKET_WRAPPER_SOCKET_H
+#endif //SERVER_SOCKET_H

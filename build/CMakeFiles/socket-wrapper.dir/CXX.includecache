@@ -7,26 +7,20 @@
 #IncludeRegexTransform: 
 
 ../include/socketwrapper/Socket.h
-string
+iostream
 -
 cstring
 -
 tuple
 -
-exception
--
-cerrno
--
 sys/socket.h
--
-sys/types.h
 -
 arpa/inet.h
 -
 unistd.h
 -
-SocketException.h
-../include/socketwrapper/SocketException.h
+socketwrapper/SocketException.h
+../include/socketwrapper/socketwrapper/SocketException.h
 
 ../include/socketwrapper/SocketException.h
 exception

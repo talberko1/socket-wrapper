@@ -7,15 +7,19 @@
 
 #include <exception>
 
+constexpr auto SOCKET_ERROR = -1;
+
 class SocketException : public std::exception {
 protected:
     std::string m_message;
     int m_error;
 public:
-    explicit SocketException(const char* message) : m_message(message), m_error(errno) {}
+    explicit SocketException(const char *message) : m_message(message), m_error(errno) {}
+
     std::string getMessage() {
         return m_message;
     }
+
     int getError() const {
         return m_error;
     }

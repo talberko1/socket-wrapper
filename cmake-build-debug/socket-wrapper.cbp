@@ -87,6 +87,9 @@
 		<Unit filename="/home/tal/Desktop/dev/socket-wrapper/src/Socket.cpp">
 			<Option target="socket-wrapper"/>
 		</Unit>
+		<Unit filename="/home/tal/Desktop/dev/socket-wrapper/src/testapp.cpp">
+			<Option target="socket-wrapper"/>
+		</Unit>
 		<Unit filename="/home/tal/Desktop/dev/socket-wrapper/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

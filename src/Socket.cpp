@@ -8,9 +8,10 @@ void assertSocket(int expression, const char *message);
 
 struct sockaddr_in createAddress(int domain, const char *ip, int port);
 
-Socket::Socket(int domain, int type, int protocol) : Socket(socket(domain, type, protocol), domain, type, protocol){}
+Socket::Socket(int domain, int type, int protocol) : Socket(socket(domain, type, protocol), domain, type, protocol) {}
 
-Socket::Socket(int fd, int domain, int type, int protocol) : m_domain(domain), m_type(type), m_protocol(protocol), m_fd(fd){
+Socket::Socket(int fd, int domain, int type, int protocol) : m_domain(domain), m_type(type), m_protocol(protocol),
+                                                             m_fd(fd) {
     assertSocket(m_fd, "Failed to initialize socket");
 }
 
@@ -42,7 +43,7 @@ unsigned long Socket::send(const char *message, size_t length, int flags) const 
     return bytes;
 }
 
-unsigned long Socket::recv(char* buffer, size_t length, int flags) const {
+unsigned long Socket::recv(char *buffer, size_t length, int flags) const {
     size_t received;
     assertSocket(received = ::recv(m_fd, buffer, length, flags), "Failed to receive data");
     return received;
@@ -73,4 +74,28 @@ struct sockaddr_in createAddress(int domain, const char *ip, int port) {
     target.sin_port = htons(port);
     target.sin_addr.s_addr = inet_addr(ip);
     return target;
+}
+
+bool Socket::operator==(const Socket &other) const {
+    return m_domain == other.m_domain && m_type == other.m_type && m_protocol == other.m_protocol && m_fd == other.m_fd;
+}
+
+bool Socket::operator!=(const Socket &other) const {
+    return !(*this == other);
+}
+
+int Socket::getAF() const {
+    return m_domain;
+}
+
+int Socket::getType() const {
+    return m_type;
+}
+
+int Socket::getProtocol() const {
+    return m_protocol;
+}
+
+int Socket::getFD() const {
+    return m_fd;
 }

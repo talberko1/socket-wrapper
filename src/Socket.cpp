@@ -6,8 +6,6 @@
 
 void assertSocket(int expression, const char *message);
 
-struct sockaddr_in createAddress(int domain, const char *ip, int port);
-
 Socket::Socket(int domain, int type, int protocol) : Socket(socket(domain, type, protocol), domain, type, protocol) {}
 
 Socket::Socket(int fd, int domain, int type, int protocol) : m_domain(domain), m_type(type), m_protocol(protocol),
@@ -37,15 +35,30 @@ void Socket::connect(const char *ip, int port) const {
                  "Failed to connect to target address");
 }
 
-unsigned long Socket::send(const char *message, size_t length, int flags) const {
+size_t Socket::send(const char *message, size_t length, int flags) const {
     size_t bytes;
     assertSocket(bytes = ::send(m_fd, message, length, flags), "Failed to send data");
     return bytes;
 }
 
-unsigned long Socket::recv(char *buffer, size_t length, int flags) const {
+size_t
+Socket::sendto(const char *message, size_t length, int flags, struct sockaddr_in address, socklen_t addressLength) const {
+    size_t sent;
+    assertSocket(sent = ::sendto(m_fd, message, length, flags, (struct sockaddr *) &address, addressLength),
+                 "Failed to send data");
+    return sent;
+}
+
+size_t Socket::recv(char *buffer, size_t length, int flags) const {
     size_t received;
     assertSocket(received = ::recv(m_fd, buffer, length, flags), "Failed to receive data");
+    return received;
+}
+
+size_t Socket::recvfrom(char *buffer, size_t length, int flags, struct sockaddr_in address, socklen_t* addressLength) const {
+    size_t received;
+    assertSocket(received = ::recvfrom(m_fd, buffer, length, flags, (struct sockaddr *) &address, addressLength),
+                 "Failed to send data");
     return received;
 }
 
@@ -68,7 +81,7 @@ void assertSocket(int expression, const char *message) {
     }
 }
 
-struct sockaddr_in createAddress(int domain, const char *ip, int port) {
+struct sockaddr_in Socket::createAddress(int domain, const char *ip, int port) {
     struct sockaddr_in target{};
     target.sin_family = domain;
     target.sin_port = htons(port);

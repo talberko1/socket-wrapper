@@ -33,9 +33,13 @@ public:
 
     void connect(const char *ip, int port) const;
 
-    unsigned long send(const char *message, size_t length, int flags = 0) const;
+    size_t send(const char *message, size_t length, int flags = 0) const;
 
-    unsigned long recv(char *buffer, unsigned long bytes, int flags = 0) const;
+    size_t sendto(const char* message, size_t length, int flags, sockaddr_in address, socklen_t addressLength) const;
+
+    size_t recv(char *buffer, unsigned long bytes, int flags = 0) const;
+
+    size_t recvfrom(char* message, size_t length, int flags, sockaddr_in address, socklen_t* addressLength) const;
 
     void close() const;
 
@@ -52,6 +56,8 @@ public:
     int getType() const;
 
     int getProtocol() const;
+
+    static struct sockaddr_in createAddress(int domain, const char *ip, int port) ;
 };
 
 #endif //SERVER_SOCKET_H

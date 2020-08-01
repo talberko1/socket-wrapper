@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
   "CMakeFiles/socket-wrapper.dir/src/Socket.cpp.o"
-  "CMakeFiles/socket-wrapper.dir/src/testapp.cpp.o"
   "libsocket-wrapper.pdb"
   "libsocket-wrapper.so"
 )

@@ -49,6 +49,8 @@ public:
 
     bool operator!=(const Socket& other) const;
 
+    bool operator<(const Socket& other) const;
+
     int getFD() const;
 
     int getAF() const;

@@ -97,6 +97,10 @@ bool Socket::operator!=(const Socket &other) const {
     return !(*this == other);
 }
 
+bool Socket::operator<(const Socket &other) const {
+    return m_fd < other.m_fd;
+}
+
 int Socket::getAF() const {
     return m_domain;
 }

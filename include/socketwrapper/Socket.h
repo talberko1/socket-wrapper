@@ -35,16 +35,15 @@ protected:
     Socket(int descriptor, int domain, int type, int protocol);
 
     /*
-     * Check the return values of sys/socket.h functions
-     * if the return value in the expression parameter is SOCKET_ERROR (-1),
-     * SocketException is thrown with the given message
+     * Checks the return values of sys/socket.h functions.
+     * Throws a SocketException if the expression is equal to SOCKET_ERROR (-1).
      */
     static void assertSocket(int expression, const char *message);
 
 public:
 
     /*
-     * Create a new Socket of the given type, in the given domain, using the given protocol.
+     * Creates a new Socket of the given type, in the given domain, using the given protocol.
      * if the protocol is 0, one is chosen automatically.
      * Returns a new Socket object.
      * Throws a SocketException on error.
@@ -52,13 +51,13 @@ public:
     Socket(int domain, int type, int protocol);
 
     /*
-     * Give the current Socket the local ip address and port number to bind to.
+     * Gives the current Socket the local ip address and port number to bind to.
      * Throws a SocketException on error.
      */
     void bind(const char *ip, int port) const;
 
     /*
-     * Prepare to accept connections on the current Socket.
+     * Prepares to accept connections on the current Socket.
      * the value passed in, listeners, is the amount of connection requests that will
      * be queued before further requests are refused.
      * Throws a SocketException on error.
@@ -66,26 +65,28 @@ public:
     void listen(int listeners) const;
 
     /*
-     * Await a connection on the current Socket.
-     * When a connection arrives, open a new Socket to communicate with it,
-     * and return the new Socket and its address
+     * Awaits a connection on the current Socket.
+     * When a connection arrives, a new Socket is open to communicate with.
+     * Returns the new Socket and its address.
+     * Throws a SocketException on error.
      */
     std::tuple<Socket, const char *> accept() const;
 
     /*
-     * Open a connection to the peer address at the given ip address and port number.
+     * Opens a connection to the peer address at the given ip address and port number.
+     * Throws a SocketException on error.
      */
     void connect(const char *ip, int port) const;
 
     /*
-     * Send length amount of bytes of buffer to the current Socket.
-     * Return the number of bytes sent.
+     * Sends length amount of bytes of buffer to the current Socket.
+     * Returns the number of bytes sent.
      * Throws a SocketException on error.
      */
     size_t send(const void *buffer, size_t length, int flags) const;
 
     /*
-     * Send length amount of bytes of buffer on the socket to peer at address (which is
+     * Sends length amount of bytes of buffer on the socket to peer at address (which is
      * addressLength bytes long).
      * Returns the number of bytes sent.
      * Throws a SocketException on error.
@@ -93,72 +94,72 @@ public:
     size_t sendto(const void *buffer, size_t length, int flags, sockaddr_in* address, socklen_t addressLength) const;
 
     /*
-     * Read through the socket and fill buffer with length amount of bytes.
+     * Reads through the socket and fills buffer with length amount of bytes.
      * Returns the number of bytes read.
      * Throws a SocketException on error.
      */
-    size_t recv(void *buffer, unsigned long bytes, int flags) const;
+    size_t recv(void *buffer, size_t length, int flags) const;
 
     /*
-     * Read through the socket and fill buffer with length amount of bytes.
-     * If address is not null, fill in *addressLength bytes of it with the address of
-     * the sender, and store the actual size of the address in *addressLength.
+     * Reads through the socket and fills buffer with length amount of bytes.
+     * If address is not null, fills in *addressLength bytes of it with the address of
+     * the sender, and stores the actual size of the address in *addressLength.
      * Returns the number of bytes read.
      * Throws a SocketException on error.
      */
     size_t recvfrom(void *buffer, size_t length, int flags, sockaddr_in *address, socklen_t *addressLength) const;
 
     /*
-     * Close the socket object
-     * Throws a SocketException if the socket could not be closed
+     * Closes the socket object
+     * Throws a SocketException on error.
      */
     void close() const;
 
     /*
-     * Method to wrap a file descriptor as a Socket object
+     * Wraps a file descriptor as a Socket object.
      */
     static Socket wrapFileDescriptor(int descriptor);
 
     /*
-     * Method to create a target address for the given
-     * domain (address family), ip address and port number
+     * Creates a target address for the given domain (address family),
+     * ip address and port number.
      */
     static struct sockaddr_in createAddress(int domain, const char *ip, int port);
 
     /*
-     * Get the socket address family.
+     * Gets the socket address family.
      */
     int getAddressFamily() const;
 
     /*
-     * Get the socket type.
+     * Gets the socket type.
      */
     int getType() const;
 
     /*
-     * Get the socket protocol.
+     * Gets the socket protocol.
      */
     int getProtocol() const;
 
     /*
-     * Get the socket file descriptor.
+     * Gets the socket file descriptor.
      */
     int getDescriptor() const;
 
     /*
-     * Check if the fields of the current socket are
+     * Checks if the fields of the current socket are
      * equal to the fields of the compared socket.
      */
     bool operator==(const Socket &other) const;
 
     /*
-     * Check if the fields of the current socket are
+     * Checks if the fields of the current socket are
      * not equal to the fields of the compared socket.
      */
     bool operator!=(const Socket &other) const;
 
     /*
-     * Compare between the file descriptor of the current
+     * Compares between the file descriptor of the current
      * socket to the file descriptor of the compared socket.
      */
     bool operator<(const Socket &other) const;
